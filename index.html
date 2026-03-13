@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>香港記憶配對 | HK Memory Match</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🃏</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ═══════════════════════════════════════
+       Language Selection Screen
+       ═══════════════════════════════════════ -->
+  <div id="lang-screen" class="screen active">
+    <div class="lang-container">
+      <div class="logo">
+        <div class="logo-icon">🃏</div>
+        <h1 class="logo-title">
+          <span class="zh">香港記憶配對</span>
+          <span class="en">HK Memory Match</span>
+        </h1>
+      </div>
+      <div class="lang-buttons">
+        <button class="lang-btn" data-lang="zh">
+          <span class="lang-flag">🇭🇰</span>
+          <span>中文</span>
+        </button>
+        <button class="lang-btn" data-lang="en">
+          <span class="lang-flag">🌐</span>
+          <span>English</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       Lobby — Scene Selection
+       ═══════════════════════════════════════ -->
+  <div id="lobby-screen" class="screen">
+    <div class="lobby-header">
+      <h2 id="lobby-title">選擇場景</h2>
+      <div class="lobby-controls">
+        <button id="how-to-play-btn" class="icon-btn" title="How to Play">❓</button>
+        <button id="lang-switch-btn" class="icon-btn" title="Switch Language">EN</button>
+        <button id="bgm-toggle-btn" class="icon-btn" title="BGM">🎵</button>
+      </div>
+    </div>
+    <div id="scene-grid" class="scene-grid"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       Game Screen
+       ═══════════════════════════════════════ -->
+  <div id="game-screen" class="screen">
+    <div class="game-header">
+      <!-- Back to Lobby -->
+      <button id="back-to-lobby" class="header-btn">
+        <span class="btn-icon">🏠</span>
+        <span id="back-btn-text">返回大廳</span>
+      </button>
+
+      <!-- Stats -->
+      <div class="game-info">
+        <div class="info-item">
+          <span class="info-icon">⏱️</span>
+          <span id="timer">00:00</span>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">✅</span>
+          <span id="match-count">0/10</span>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">❌</span>
+          <span id="wrong-count">0</span>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="game-controls">
+        <label class="toggle-switch">
+          <input type="checkbox" id="color-hint-checkbox">
+          <span class="toggle-slider"></span>
+          <span id="color-hint-label" class="toggle-label">顏色提示</span>
+        </label>
+        <button id="hint-btn" class="header-btn">
+          <span class="btn-icon">💡</span>
+          <span id="hint-btn-text">提示</span>
+        </button>
+        <button id="bgm-game-toggle" class="icon-btn">🎵</button>
+      </div>
+    </div>
+
+    <!-- Card Grid -->
+    <div id="card-grid" class="card-grid"></div>
+
+    <!-- Hint Banner -->
+    <div id="hint-banner" class="hint-banner hidden"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       Win Screen
+       ═══════════════════════════════════════ -->
+  <div id="win-screen" class="screen">
+    <div class="win-container">
+      <div class="win-icon">🎉</div>
+      <h2 id="win-title">恭喜過關！</h2>
+      <div class="win-stats">
+        <div class="stat">
+          <span class="stat-label" id="win-time-label">用時</span>
+          <span class="stat-value" id="win-time">00:00</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label" id="win-attempts-label">嘗試次數</span>
+          <span class="stat-value" id="win-attempts">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label" id="win-accuracy-label">準確率</span>
+          <span class="stat-value" id="win-accuracy">100%</span>
+        </div>
+      </div>
+      <div class="win-buttons">
+        <button id="replay-btn" class="primary-btn">再玩一次</button>
+        <button id="lobby-btn" class="secondary-btn">返回大廳</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="js/data.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
