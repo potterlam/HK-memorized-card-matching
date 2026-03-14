@@ -1,6 +1,7 @@
 # 🃏 香港記憶配對 HK Memory Match
 
 A bilingual (中文 / English) card-matching memory game featuring Hong Kong culture.
+https://potterlam.github.io/HK-memorized-card-matching/
 
 ## 🎮 How to Play
 
