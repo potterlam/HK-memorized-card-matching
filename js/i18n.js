@@ -39,11 +39,18 @@ const I18N = {
     langSwitch: 'EN',
     howToPlay: '玩法說明',
     howToPlayText: [
-      '翻開三張卡片，配對同一組的圖片、中文和英文。',
+      '翻開卡片，配對同一組的內容。',
       '錯誤太多會獲得提示幫助。',
       '開啟「顏色提示」可在卡片背面看到分組顏色。'
     ],
-    gotIt: '明白了！'
+    gotIt: '明白了！',
+    modeTitle: '選擇模式',
+    modes: {
+      'zh-pic':    '中文 & 圖片',
+      'en-pic':    'Eng & 圖片',
+      'zh-en-pic': '中文 & Eng & 圖片',
+      'zh-en':     '中文 & English'
+    }
   },
   en: {
     siteTitle: 'HK Memory Match',
@@ -80,10 +87,17 @@ const I18N = {
     langSwitch: '中文',
     howToPlay: 'How to Play',
     howToPlayText: [
-      'Flip 3 cards to match a picture, Chinese name and English name.',
+      'Flip cards to match items from the same set.',
       'Get too many wrong and you\'ll receive helpful hints.',
       'Turn on "Color Hints" to see grouping colours on card backs.'
     ],
-    gotIt: 'Got it!'
+    gotIt: 'Got it!',
+    modeTitle: 'Choose Mode',
+    modes: {
+      'zh-pic':    'Chinese & Pic',
+      'en-pic':    'English & Pic',
+      'zh-en-pic': 'Chinese & Eng & Pic',
+      'zh-en':     'Chinese & English'
+    }
   }
 };

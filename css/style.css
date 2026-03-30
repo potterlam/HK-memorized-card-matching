@@ -236,6 +236,50 @@ button {
   padding-bottom: 2rem;
 }
 
+/* ═══════════════════════════════════════════
+   Game Mode Selector
+   ═══════════════════════════════════════════ */
+.game-mode-selector {
+  margin-bottom: 1.5rem;
+}
+
+.game-mode-selector h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  margin-bottom: 0.8rem;
+}
+
+.mode-buttons {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.mode-btn {
+  padding: 0.6rem 1.3rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: var(--surface);
+  border: 2px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  transition: all var(--transition);
+}
+
+.mode-btn:hover {
+  border-color: rgba(255,215,0,0.3);
+  color: var(--text);
+  background: var(--surface-light);
+}
+
+.mode-btn.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(255,215,0,0.08);
+  box-shadow: 0 0 12px rgba(255,215,0,0.15);
+}
+
 .scene-card {
   background: var(--surface);
   border: 2px solid rgba(255,255,255,0.06);
@@ -576,6 +620,13 @@ button {
 
 .card-emoji {
   font-size: clamp(1.8rem, 5vw, 3rem);
+}
+
+.card-img {
+  max-width: 80%;
+  max-height: 70%;
+  object-fit: contain;
+  border-radius: 6px;
 }
 
 .card-type-chinese .card-content {

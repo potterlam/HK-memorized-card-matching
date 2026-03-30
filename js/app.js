@@ -1,6 +1,10 @@
 /* ============================================================
    Hong Kong Memory Match — Main Application
-   Card-matching game: match triplets (Picture + 中文 + English)
+   Card-matching game with multiple modes:
+     • zh-pic:    Chinese + Picture  (pairs)
+     • en-pic:    English + Picture  (pairs)
+     • zh-en-pic: Chinese + English + Picture (triplets)
+     • zh-en:     Chinese + English  (pairs)
    ============================================================ */
 
 const audio = new AudioManager();
@@ -8,6 +12,7 @@ const audio = new AudioManager();
 const App = (() => {
   /* ── State ── */
   let lang = 'zh';
+  let gameMode = 'zh-en-pic';
   let currentScene = null;
   let cards = [];
   let flippedIndices = [];
@@ -139,10 +144,26 @@ const App = (() => {
     const grid = $('#card-grid');
     grid.innerHTML = '';
 
+    // Dynamic columns: 6 for triplets (30 cards), 5 for pairs (20 cards)
+    const cols = gameMode === 'zh-en-pic' ? 6 : 5;
+    grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
     cards.forEach((card, idx) => {
       const el = document.createElement('div');
       el.className = 'card';
       el.dataset.index = idx;
+
+      // Determine front content — try custom image for picture cards
+      let frontContent;
+      if (card.type === 'picture') {
+        const sceneId = currentScene.id;
+        const imgUrl = `data/images/${sceneId}/${card.itemId}.png`;
+        frontContent = `<img class="card-img" src="${imgUrl}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display=''">
+            <span class="card-content card-emoji" style="display:none">${card.display}</span>`;
+      } else {
+        frontContent = `<span class="card-content">${card.display}</span>`;
+      }
+
       el.innerHTML = `
         <div class="card-inner">
           <div class="card-back" style="${colorHintsOn ? `background-color:${card.color}` : ''}">
@@ -150,7 +171,7 @@ const App = (() => {
           </div>
           <div class="card-front card-type-${card.type}">
             <span class="card-type-badge">${card.label}</span>
-            <span class="card-content ${card.type === 'picture' ? 'card-emoji' : ''}">${card.display}</span>
+            ${frontContent}
           </div>
         </div>
       `;
@@ -174,14 +195,15 @@ const App = (() => {
 
     // Speak the card content
     const card = cards[idx];
+    const item = currentScene.items.find(it => it.id === card.itemId);
     if (card.type === 'chinese') {
-      audio.speak(card.display, 'zh');
+      audio.speak(card.display, 'zh', card.itemId);
     } else if (card.type === 'english') {
-      audio.speak(card.display, 'en');
+      audio.speak(card.display, 'en', card.itemId);
     }
 
-    // Check when 3 cards are flipped
-    if (flippedIndices.length === 3) {
+    // Check when required number of cards are flipped
+    if (flippedIndices.length === getCardsPerMatch()) {
       isProcessing = true;
       totalAttempts++;
       checkMatch();
@@ -202,27 +224,27 @@ const App = (() => {
      Match Logic
      ═══════════════════════════════════════════ */
   function checkMatch() {
-    const [a, b, c] = flippedIndices;
-    const cA = cards[a], cB = cards[b], cC = cards[c];
+    const indices = [...flippedIndices];
+    const matchCards = indices.map(i => cards[i]);
 
-    const sameItem = (cA.itemId === cB.itemId) && (cB.itemId === cC.itemId);
-    const types = new Set([cA.type, cB.type, cC.type]);
-    const allDifferent = types.size === 3;
+    const sameItem = matchCards.every(c => c.itemId === matchCards[0].itemId);
+    const types = new Set(matchCards.map(c => c.type));
+    const allDifferent = types.size === matchCards.length;
 
     if (sameItem && allDifferent) {
       // ✅ Correct match
-      matchedItemIds.add(cA.itemId);
+      matchedItemIds.add(matchCards[0].itemId);
       consecutiveWrongs = 0;
 
       setTimeout(() => {
-        [a, b, c].forEach(i => {
+        indices.forEach(i => {
           const el = $(`.card[data-index="${i}"]`);
           if (el) el.classList.add('matched');
         });
         audio.playMatch();
 
         // Show meaning toast
-        const item = currentScene.items.find(it => it.id === cA.itemId);
+        const item = currentScene.items.find(it => it.id === matchCards[0].itemId);
         if (item) {
           showMeaningToast(item);
         }
@@ -245,7 +267,7 @@ const App = (() => {
       maybeShowHint();
 
       setTimeout(() => {
-        [a, b, c].forEach(i => flipCardElement(i, false));
+        indices.forEach(i => flipCardElement(i, false));
         flippedIndices = [];
         isProcessing = false;
       }, 1200);
@@ -509,6 +531,14 @@ const App = (() => {
     $('#bgm-game-toggle').addEventListener('click', () => {
       const on = audio.toggleBGM();
       $('#bgm-game-toggle').textContent = on ? t('bgmOn') : t('bgmOff');
+    });
+
+    // Game mode selector
+    $$('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        gameMode = btn.dataset.mode;
+        $$('.mode-btn').forEach(b => b.classList.toggle('active', b === btn));
+      });
     });
 
     // Win screen

@@ -1,11 +1,40 @@
 /* ============================================================
-   Hong Kong Memory Match — Scene & Item Data
+   Hong Kong Memory Match — Game Data
    5 Scenes × 10 Items each
+   ============================================================
+
+   📝 HOW TO EDIT THIS FILE
+   ─────────────────────────
+   • To change a word:  edit the zhName or enName field below
+   • To change meaning: edit the zhMeaning or enMeaning field
+   • To change emoji:   edit the emoji field
+
+   🖼️ CUSTOM IMAGES (optional — replaces emoji on cards)
+   ─────────────────────────────────────────────────────
+   Save image as:  data/images/<scene-id>/<item-id>.png
+   Example:        data/images/dimsum/hargow.png
+   Supported:      .png .jpg .webp
+
+   🔊 CUSTOM AUDIO (optional — replaces text-to-speech)
+   ────────────────────────────────────────────────────
+   Save audio as:  data/audio/zh/<item-id>.mp3   (Chinese)
+                   data/audio/en/<item-id>.mp3   (English)
+   Example:        data/audio/zh/hargow.mp3
+
    ============================================================ */
 
+// 10 visually distinct colours for the colour-hint feature
 const ITEM_COLORS = [
-  '#E74C3C', '#3498DB', '#2ECC71', '#F39C12', '#9B59B6',
-  '#1ABC9C', '#E91E63', '#FF9800', '#00BCD4', '#8BC34A'
+  '#E53935',  // 1  Red
+  '#1E88E5',  // 2  Blue
+  '#43A047',  // 3  Green
+  '#FDD835',  // 4  Yellow
+  '#8E24AA',  // 5  Purple
+  '#FB8C00',  // 6  Orange
+  '#D81B60',  // 7  Pink
+  '#00ACC1',  // 8  Cyan
+  '#6D4C41',  // 9  Brown
+  '#546E7A',  // 10 Blue-Grey
 ];
 
 const SCENES = [

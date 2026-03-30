@@ -7,9 +7,14 @@ https://potterlam.github.io/HK-memorized-card-matching/
 ## 🎮 How to Play
 
 1. **Choose your language** — 中文 or English
-2. **Pick a scene** — Dim Sum, Landmarks, Transport, Festivals or Street Food
-3. **Flip 3 cards** to find matching triplets: **Picture + 中文 name + English name**
-4. Match all 10 sets to win!
+2. **Pick a game mode** — 4 modes available:
+   - 中文 & 圖片 (Chinese & Pic) — match pairs
+   - Eng & 圖片 (English & Pic) — match pairs
+   - 中文 & Eng & 圖片 (Chinese & Eng & Pic) — match triplets
+   - 中文 & English (Chinese & English) — match pairs
+3. **Pick a scene** — Dim Sum, Landmarks, Transport, Festivals or Street Food
+4. **Flip cards** to find matching sets
+5. Match all 10 sets to win!
 
 ### Helpers
 - **Color Hints** — Toggle on to see grouping colours on card backs
@@ -26,11 +31,37 @@ https://potterlam.github.io/HK-memorized-card-matching/
 | Festivals | 香港節慶 | 農曆新年, 中秋節, 端午節 … |
 | Street Food | 港式街頭小食 | 咖喱魚蛋, 雞蛋仔, 菠蘿包 … |
 
+## 📝 Customising Content
+
+### Edit Words & Meanings
+Open `js/data.js` in any text editor. Each item has clear fields:
+```
+zhName: '蝦餃',        ← Chinese name
+enName: 'Har Gow',     ← English name
+zhMeaning: '...',       ← Chinese description
+enMeaning: '...',       ← English description
+emoji: '🥟',            ← fallback emoji
+```
+
+### Custom Images
+Replace the emoji with a picture by saving an image to:
+```
+data/images/<scene-id>/<item-id>.png
+```
+Example: `data/images/dimsum/hargow.png`
+
+### Custom Audio
+Replace text-to-speech with your own recordings:
+```
+data/audio/zh/<item-id>.mp3   (Chinese pronunciation)
+data/audio/en/<item-id>.mp3   (English pronunciation)
+```
+
 ## 🔊 Audio
 
 - **BGM** — Procedural pentatonic ambient music (Web Audio API)
 - **SFX** — Card flip, match, wrong, win sounds
-- **Speech** — Chinese/English pronunciation via Web Speech API
+- **Speech** — Custom audio files → Web Speech API fallback
 
 ## 🛠️ Tech
 
@@ -43,9 +74,19 @@ Open `index.html` in any modern browser.
 ├── index.html
 ├── css/style.css
 ├── js/
-│   ├── data.js      # 5 scenes × 10 items
-│   ├── i18n.js      # Bilingual UI strings
-│   ├── audio.js     # BGM + SFX + TTS
-│   └── app.js       # Game logic
+│   ├── data.js       # 5 scenes × 10 items (human-editable)
+│   ├── i18n.js       # Bilingual UI strings
+│   ├── audio.js      # BGM + SFX + TTS
+│   └── app.js        # Game logic
+├── data/
+│   ├── images/       # Custom card images (optional)
+│   │   ├── dimsum/
+│   │   ├── landmarks/
+│   │   ├── transport/
+│   │   ├── festivals/
+│   │   └── streetfood/
+│   └── audio/        # Custom pronunciation (optional)
+│       ├── zh/
+│       └── en/
 └── README.md
 ```

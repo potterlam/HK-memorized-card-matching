@@ -148,14 +148,29 @@ class AudioManager {
   }
 
   /* ═══════════════════════════════════════════
-     Text-to-Speech for Card Pronunciation
+     Text-to-Speech / Custom Audio for Card Pronunciation
      ═══════════════════════════════════════════ */
 
-  speak(text, lang) {
+  speak(text, langCode, itemId) {
+    // Try custom audio file first (data/audio/zh/hargow.mp3)
+    if (itemId) {
+      const audioUrl = `data/audio/${langCode}/${itemId}.mp3`;
+      const audioEl = new Audio(audioUrl);
+      audioEl.volume = 0.8;
+      const p = audioEl.play();
+      if (p && p.catch) {
+        p.catch(() => this._speakTTS(text, langCode));
+      }
+      return;
+    }
+    this._speakTTS(text, langCode);
+  }
+
+  _speakTTS(text, langCode) {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = lang === 'zh' ? 'zh-HK' : 'en-GB';
+    u.lang = langCode === 'zh' ? 'zh-HK' : 'en-GB';
     u.rate = 0.85;
     u.volume = 0.8;
     window.speechSynthesis.speak(u);
