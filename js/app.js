@@ -209,20 +209,28 @@ const App = (() => {
         </div>
       `;
 
-      // Try loading custom image for picture cards
+      // Try loading custom image for picture cards (.png, .jpg, .webp)
       if (card.type === 'picture') {
         const sceneId = currentScene.id;
-        const img = new Image();
-        img.className = 'card-img';
-        img.src = `data/images/${sceneId}/${card.itemId}.png`;
-        img.onload = () => {
-          const emojiSpan = el.querySelector('.card-emoji');
-          if (emojiSpan) {
-            emojiSpan.style.display = 'none';
-            emojiSpan.parentNode.insertBefore(img, emojiSpan);
-          }
+        const base = `data/images/${sceneId}/${card.itemId}`;
+        const exts = ['png', 'jpg', 'webp'];
+        let tried = 0;
+        const tryNext = () => {
+          if (tried >= exts.length) return; // all failed, keep emoji
+          const img = new Image();
+          img.className = 'card-img';
+          img.src = `${base}.${exts[tried]}`;
+          tried++;
+          img.onload = () => {
+            const emojiSpan = el.querySelector('.card-emoji');
+            if (emojiSpan) {
+              emojiSpan.style.display = 'none';
+              emojiSpan.parentNode.insertBefore(img, emojiSpan);
+            }
+          };
+          img.onerror = tryNext;
         };
-        // On error: just keep the emoji, do nothing
+        tryNext();
       }
 
       el.addEventListener('click', () => onCardClick(idx));
