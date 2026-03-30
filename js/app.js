@@ -73,6 +73,15 @@ const App = (() => {
     const grid = $('#scene-grid');
     grid.innerHTML = '';
 
+    // Update mode selector text
+    $('#mode-title').textContent = t('modeTitle');
+    const modes = t('modes');
+    $$('.mode-btn').forEach(btn => {
+      const m = btn.dataset.mode;
+      if (modes[m]) btn.querySelector('.mode-label').textContent = modes[m];
+      btn.classList.toggle('active', m === gameMode);
+    });
+
     SCENES.forEach(scene => {
       const card = document.createElement('div');
       card.className = 'scene-card';
@@ -95,6 +104,20 @@ const App = (() => {
   /* ═══════════════════════════════════════════
      Game Setup
      ═══════════════════════════════════════════ */
+  function getCardTypes() {
+    switch (gameMode) {
+      case 'zh-pic':    return ['picture', 'chinese'];
+      case 'en-pic':    return ['picture', 'english'];
+      case 'zh-en':     return ['chinese', 'english'];
+      case 'zh-en-pic': return ['picture', 'chinese', 'english'];
+      default:          return ['picture', 'chinese', 'english'];
+    }
+  }
+
+  function getCardsPerMatch() {
+    return getCardTypes().length;
+  }
+
   function startGame(sceneId) {
     currentScene = SCENES.find(s => s.id === sceneId);
     if (!currentScene) return;
@@ -122,10 +145,23 @@ const App = (() => {
 
   function generateCards(scene) {
     const result = [];
-    scene.items.forEach(item => {
-      result.push({ type: 'picture', itemId: item.id, display: item.emoji, color: item.color, label: t('cardTypes').picture });
-      result.push({ type: 'chinese', itemId: item.id, display: item.zhName, color: item.color, label: t('cardTypes').chinese });
-      result.push({ type: 'english', itemId: item.id, display: item.enName, color: item.color, label: t('cardTypes').english });
+    const types = getCardTypes();
+    scene.items.forEach((item, idx) => {
+      const color = ITEM_COLORS[idx % ITEM_COLORS.length];
+      types.forEach(type => {
+        let display, label;
+        if (type === 'picture') {
+          display = item.emoji;
+          label = t('cardTypes').picture;
+        } else if (type === 'chinese') {
+          display = item.zhName;
+          label = t('cardTypes').chinese;
+        } else {
+          display = item.enName;
+          label = t('cardTypes').english;
+        }
+        result.push({ type, itemId: item.id, display, color, label });
+      });
     });
     return result;
   }
