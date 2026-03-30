@@ -14,6 +14,7 @@ const App = (() => {
   let lang = 'zh';
   let gameMode = 'zh-en-pic';
   let currentScene = null;
+  let cardsPerMatch = 3;
   let cards = [];
   let flippedIndices = [];
   let matchedItemIds = new Set();
@@ -121,6 +122,9 @@ const App = (() => {
   function startGame(sceneId) {
     currentScene = SCENES.find(s => s.id === sceneId);
     if (!currentScene) return;
+
+    // Lock in the match size for this game session
+    cardsPerMatch = getCardTypes().length;
 
     cards = generateCards(currentScene);
     shuffle(cards);
@@ -260,8 +264,7 @@ const App = (() => {
     }
 
     // Check when required number of cards are flipped
-    const needed = getCardsPerMatch();
-    if (flippedIndices.length === needed) {
+    if (flippedIndices.length === cardsPerMatch) {
       isProcessing = true;
       totalAttempts++;
       checkMatch();
