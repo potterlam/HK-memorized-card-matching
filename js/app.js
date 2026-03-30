@@ -189,13 +189,10 @@ const App = (() => {
       el.className = 'card';
       el.dataset.index = idx;
 
-      // Determine front content — try custom image for picture cards
+      // Build front content
       let frontContent;
       if (card.type === 'picture') {
-        const sceneId = currentScene.id;
-        const imgUrl = `data/images/${sceneId}/${card.itemId}.png`;
-        frontContent = `<img class="card-img" src="${imgUrl}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display=''">
-            <span class="card-content card-emoji" style="display:none">${card.display}</span>`;
+        frontContent = `<span class="card-content card-emoji">${card.display}</span>`;
       } else {
         frontContent = `<span class="card-content">${card.display}</span>`;
       }
@@ -211,6 +208,23 @@ const App = (() => {
           </div>
         </div>
       `;
+
+      // Try loading custom image for picture cards
+      if (card.type === 'picture') {
+        const sceneId = currentScene.id;
+        const img = new Image();
+        img.className = 'card-img';
+        img.src = `data/images/${sceneId}/${card.itemId}.png`;
+        img.onload = () => {
+          const emojiSpan = el.querySelector('.card-emoji');
+          if (emojiSpan) {
+            emojiSpan.style.display = 'none';
+            emojiSpan.parentNode.insertBefore(img, emojiSpan);
+          }
+        };
+        // On error: just keep the emoji, do nothing
+      }
+
       el.addEventListener('click', () => onCardClick(idx));
       grid.appendChild(el);
     });
@@ -227,19 +241,19 @@ const App = (() => {
     // Flip the card
     flippedIndices.push(idx);
     flipCardElement(idx, true);
-    audio.playFlip();
+    try { audio.playFlip(); } catch(e) {}
 
     // Speak the card content
     const card = cards[idx];
-    const item = currentScene.items.find(it => it.id === card.itemId);
     if (card.type === 'chinese') {
-      audio.speak(card.display, 'zh', card.itemId);
+      try { audio.speak(card.display, 'zh', card.itemId); } catch(e) {}
     } else if (card.type === 'english') {
-      audio.speak(card.display, 'en', card.itemId);
+      try { audio.speak(card.display, 'en', card.itemId); } catch(e) {}
     }
 
     // Check when required number of cards are flipped
-    if (flippedIndices.length === getCardsPerMatch()) {
+    const needed = getCardsPerMatch();
+    if (flippedIndices.length === needed) {
       isProcessing = true;
       totalAttempts++;
       checkMatch();
@@ -277,7 +291,7 @@ const App = (() => {
           const el = $(`.card[data-index="${i}"]`);
           if (el) el.classList.add('matched');
         });
-        audio.playMatch();
+        try { audio.playMatch(); } catch(e) {}
 
         // Show meaning toast
         const item = currentScene.items.find(it => it.id === matchCards[0].itemId);
@@ -294,13 +308,13 @@ const App = (() => {
         }
       }, 400);
     } else {
-      // ❌ Wrong
+      // ❌ Wrong — flip cards back after delay
       wrongCount++;
       consecutiveWrongs++;
       $('#wrong-count').textContent = wrongCount;
-      audio.playWrong();
+      try { audio.playWrong(); } catch(e) {}
 
-      maybeShowHint();
+      try { maybeShowHint(); } catch(e) {}
 
       setTimeout(() => {
         indices.forEach(i => flipCardElement(i, false));

@@ -154,12 +154,13 @@ class AudioManager {
   speak(text, langCode, itemId) {
     // Try custom audio file first (data/audio/zh/hargow.mp3)
     if (itemId) {
-      const audioUrl = `data/audio/${langCode}/${itemId}.mp3`;
-      const audioEl = new Audio(audioUrl);
-      audioEl.volume = 0.8;
-      const p = audioEl.play();
-      if (p && p.catch) {
-        p.catch(() => this._speakTTS(text, langCode));
+      try {
+        const audioUrl = `data/audio/${langCode}/${itemId}.mp3`;
+        const audioEl = new Audio(audioUrl);
+        audioEl.volume = 0.8;
+        audioEl.play().then(() => {}).catch(() => this._speakTTS(text, langCode));
+      } catch (e) {
+        this._speakTTS(text, langCode);
       }
       return;
     }
